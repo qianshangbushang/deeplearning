@@ -1,0 +1,6 @@
+
+# ignore compress file
+*.gz
+
+# ignore dataset dir
+*/dataset/*

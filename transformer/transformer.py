@@ -9,8 +9,7 @@ class SelfAttention(nn.Module):
         self.heads = heads
         self.head_dim = emb_size // heads
 
-        assert (self.head_dim * self.heads ==
-                self.emb_size), "emb size should be div by heads"
+        assert (self.head_dim * self.heads == self.emb_size), "emb size should be div by heads"
         self.keys = nn.Linear(self.head_dim, self.head_dim, bias=False)
         self.values = nn.Linear(self.head_dim, self.head_dim, bias=False)
         self.queries = nn.Linear(self.head_dim, self.head_dim, bias=False)
@@ -112,7 +111,7 @@ class Encoder(nn.Module):
     
 
 
-class DecodeBlock(nn.Module):
+class DecoderBlock(nn.Module):
     def __init__(self, emb_size, heads, forward_expansion, dropout) -> None:
         super().__init__()
         self.attenion = SelfAttention(emb_size, heads)
@@ -135,7 +134,7 @@ class Decoder(nn.Module):
         self.word_embedding = nn.Embedding(vocab_size, emb_size)
         self.position_embedding = nn.Embedding(max_length, emb_size)
         self.layers = nn.ModuleList([
-            DecodeBlock(emb_size, heads, forward_expansion, dropout)
+            DecoderBlock(emb_size, heads, forward_expansion, dropout)
             for _ in range(num_layers)
         ])
         self.fc_out = nn.Linear(emb_size, vocab_size)

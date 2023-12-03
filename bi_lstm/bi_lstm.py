@@ -80,6 +80,13 @@ def train(model: nn.Module, train_dataloader: DataLoader, test_dataloader: DataL
             f"Epoch: {epoch} train accuracy: {train_acc}, test accuracy: {test_acc}")
     return
 
+def save_checkpoint(model:nn.Module, optimizer: optim.Optimizer, filepath:str):
+    ckpt = {
+        "model": model.state_dict(),
+        "optimizer": optimizer.state_dict()
+    }
+
+    torch.save(ckpt, filepath)
 
 def run_rnn():
     model = RNN(28, 56, 3)

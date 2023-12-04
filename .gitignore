@@ -4,3 +4,7 @@
 
 # ignore dataset dir
 */dataset/*
+
+*/flicker8k/*
+
+*.DS_Store*

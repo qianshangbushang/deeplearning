@@ -8,3 +8,4 @@
 */flicker8k/*
 
 *.DS_Store*
+*__pycache__*

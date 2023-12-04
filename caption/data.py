@@ -84,6 +84,8 @@ class FlickerDataset(Dataset):
         numericalize_caption += [self.vocabulary.stoi[end_token]]
         return img, torch.tensor(numericalize_caption)
     
+    def vocab_size(self):
+        return len(self.vocabulary)
 
 
 

@@ -1,7 +1,7 @@
 
 import torch
 
-model_name = "video_caption.pth.tar"
+model_name = "../checkpoint/video_caption.pth.tar"
 
 def save_checkpoint(ckpt: dict):
     torch.save(ckpt, model_name)
@@ -9,5 +9,6 @@ def save_checkpoint(ckpt: dict):
 
 
 def load_checkpoint():
-    model = torch.load(model_name, )
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = torch.load(model_name, map_location=device)
     return model

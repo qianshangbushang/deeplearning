@@ -16,12 +16,10 @@ class EncoderCNN(nn.Module):
         return
     
     def forward(self, images):
-        features, _ = self.inception(images)
-        for name, param in self.inception.named_parameters():
-            if 'fc.weight' in name or 'fc.bias' in name:
-                param.requires_grad = True
-            else:
-                param.requires_grad=self.train_cnn
+        if self.training:
+            features, _ = self.inception(images)
+        else:
+            features = self.inception(images)
         return self.dropout(self.relu(features))
     
 
@@ -37,9 +35,8 @@ class DecoderRNN(nn.Module):
     def forward(self, features, captions):
         embeddings = self.dropout(self.embed(captions))
         embeddings = torch.cat((features.unsqueeze(0), embeddings), dim=0)
-
-        hiddens, _ = self.lstm(embeddings)
-        outputs = self.linear(hiddens)
+        hiddens, _ = self.lstm(embeddings) # seq_len, N, hidden_size
+        outputs = self.linear(hiddens)  # seq_len, N, vocab_size
         return outputs
     
 
@@ -64,7 +61,7 @@ class CNNtoRNN(nn.Module):
 
             for _ in range(max_length):
                 hiddens, states = self.decoderRNN.lstm(x, stats)
-                output = self.decoderRNN.linear(hiddens.unsquueze(0))
+                output = self.decoderRNN.linear(hiddens.squeeze(0))
                 predicted = output.argmax(1)
 
                 result_caption.append(predicted.item())
@@ -72,4 +69,5 @@ class CNNtoRNN(nn.Module):
 
                 if vocabulary.itos[predicted.item()] == "<EOS>":
                     break
+            print(result_caption)
             return [vocabulary.itos[idx] for idx in result_caption]
